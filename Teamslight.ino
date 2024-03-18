@@ -58,8 +58,8 @@ String lastcommand = "";
     delay(50);
   }
   prevcommandnumber = commandnumber;
-  Serial.print(commandnumber);
-  Serial.print('\n');
+  //Serial.print(commandnumber);
+  //Serial.print('\n');
 }
 
 
