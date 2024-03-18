@@ -8,12 +8,17 @@
 CRGB leds[LED_COUNT];
 
 bool rainbowRunning = false;
+int commandnumber;
+int prevcommandnumber;
+int hue;
 
 void setup() {
   Serial.begin(9600);
   FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, LED_COUNT);
   FastLED.show(); // Initialize all LEDs to 'off'
   String lastcommand = "";
+  int commandnumber = 0;
+  int hue = 0;
 }
 
 void loop() {
@@ -23,27 +28,40 @@ String lastcommand = "";
     command.trim();
     String lastcommand = command; 
     if (command.equalsIgnoreCase("red")) {
-      setColor(CRGB::Red); // Red
+      commandnumber = 1;
     } else if (command.equalsIgnoreCase("yellow")) {
-      setrgb(255,43,0); // orange
+      commandnumber = 2;
     } else if (command.equalsIgnoreCase("green")) {
-      setColor(CRGB::Green); // Green
+      commandnumber = 3;
     } else if (command.equalsIgnoreCase("off")) {
-      setColor(CRGB::Black); // Turn off
+      commandnumber = 4;
     } else if (command.equalsIgnoreCase("rgb")) {
+      commandnumber = 5;
     }
   }
-while(lastcommand == "rgb") {
-  for (int j = 0; j < 256; j++) {
-    for (int i = 0; i < LED_COUNT; i++) {
-      leds[i] = CHSV((j + (i * 10)) % 256, 255, 255);
-    }
-    FastLED.show();
+  if((commandnumber != prevcommandnumber && commandnumber == 1)){
+    setColor(CRGB::Red);
+  }
+  if(commandnumber != prevcommandnumber && commandnumber == 2){
+    setrgb(255,43,0);
+  }
+  if(commandnumber != prevcommandnumber && commandnumber == 3){
+    setColor(CRGB::Green);
+  }
+  if(commandnumber != prevcommandnumber && commandnumber == 4){
+    setColor(CRGB::Black);
+  }
+  if(commandnumber == 5){
+    hue++;
+    if(hue > 255){hue = 0;}
+    setchsv(hue,255,255);
     delay(50);
   }
-}    
-Serial.print(lastcommand);   
+  prevcommandnumber = commandnumber;
+  Serial.print(commandnumber);
+  Serial.print('\n');
 }
+
 
 
 void setColor(CRGB color) {
@@ -58,6 +76,15 @@ void setrgb(int red,int green,int blue) {
   }
   FastLED.show();
 }
+void setchsv(int hue,int sat,int val) {
+  for (int i = 0; i < LED_COUNT; i++) {
+      leds[i] = CHSV(hue, sat, val);
+  }
+  FastLED.show();
+}
+
+
+
 
 
 
