@@ -67,14 +67,18 @@ String lastcommand = "";
 void setColor(CRGB color) {
   for (int i = 0; i < LED_COUNT; i++) {
     leds[i] = color;
+    delay(50);
+    FastLED.show();
   }
-  FastLED.show();
+  
 }
 void setrgb(int red,int green,int blue) {
   for (int i = 0; i < LED_COUNT; i++) {
     leds[i].setRGB(red,green,blue);
+    delay(50);
+    FastLED.show();
   }
-  FastLED.show();
+  
 }
 void setchsv(int hue,int sat,int val) {
   for (int i = 0; i < LED_COUNT; i++) {
